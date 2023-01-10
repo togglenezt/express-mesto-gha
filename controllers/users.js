@@ -1,10 +1,11 @@
 const User = require('../models/user');
+const STATUS_CODE = require('../errors/StatusCode');
 
 // показать всех пользователей
 module.exports.getUsers = (req, res) => {
   User.find({})
     .then((users) => res.send(users))
-    .catch((err) => res.status(500).send({ message: err.message }));
+    .catch(() => res.status(STATUS_CODE.serverError).send({ message: 'Ошибка на сервере' }));
 };
 
 // добавить пользователя
@@ -16,12 +17,12 @@ module.exports.createUser = (req, res) => {
     .catch((err) => {
       if (err.name === 'ValidationError') {
         res
-          .status(400)
+          .status(STATUS_CODE.dataError)
           .send({
             message: 'Переданы некорректные данные при создании пользователя.',
           });
       } else {
-        res.status(500).send({ message: err.message });
+        res.status(STATUS_CODE.serverError).send({ message: 'Ошибка на сервере' });
       }
     });
 };
@@ -36,12 +37,12 @@ module.exports.getUserById = (req, res) => {
     .catch((err) => {
       if (err.name === 'CastError') {
         return res
-          .status(400)
+          .status(STATUS_CODE.dataError)
           .send({ message: 'Переданы некорректные данные' });
       } if (err.message === 'NotFound') {
-        return res.status(404).send({ message: 'Пользователь по указанному _id не найден' });
+        return res.status(STATUS_CODE.notFound).send({ message: 'Пользователь по указанному _id не найден' });
       }
-      return res.status(500).send({ message: 'Ошибка по умолчанию' });
+      return res.status(STATUS_CODE.serverError).send({ message: 'Ошибка на сервере' });
     });
 };
 
@@ -53,11 +54,11 @@ module.exports.updateUser = (req, res) => {
     .then((user) => res.status(200).send(user))
     .catch((err) => {
       if (err.name === 'ValidationError' || err.name === 'CastError') {
-        return res.status(400).send({
+        return res.status(STATUS_CODE.dataError).send({
           message: 'Переданы некорректные данные при обновлении профиля.',
         });
       }
-      return res.status(500).send({ message: 'Ошибка по умолчанию' });
+      return res.status(STATUS_CODE.serverError).send({ message: 'Ошибка на сервере' });
     });
 };
 // обновление аватара
@@ -67,11 +68,11 @@ module.exports.updateAvatar = (req, res) => {
     .then((user) => res.status(200).send(user))
     .catch((err) => {
       if (err.name === 'ValidationError' || err.name === 'CastError') {
-        res.status(400).send({
+        res.status(STATUS_CODE.dataError).send({
           message: 'Переданы некорректные данные при обновлении профиля.',
         });
       } else {
-        res.status(500).send({ message: err.message });
+        res.status(STATUS_CODE.serverError).send({ message: 'Ошибка на сервере' });
       }
     });
 };
