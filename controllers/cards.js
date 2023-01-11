@@ -32,17 +32,25 @@ module.exports.createCard = (req, res) => {
 module.exports.deleteCard = (req, res) => {
   Card.findByIdAndDelete(req.params.cardId)
     .orFail(() => {
-      throw new NotFound('Карточка с указанным _id не найдена');
+      throw new NotFound('Карточка с указанным id не найдена');
     })
     .then((deletedCard) => {
       res.status(200).send(deletedCard);
     })
     .catch((err) => {
-      if (err.name === 'CastError') {
-        res.status(STATUS_CODE.dataError).send({ message: 'Переданы некорректные данные при удалении карточки' });
-        return;
+      if (err.name === 'NotFound') {
+        res.status(STATUS_CODE.notFound).send({
+          message: 'Карточка с указанным id не найдена.',
+        });
+      } else if (err.name === 'CastError') {
+        res.status(STATUS_CODE.dataError).send({
+          message: 'Переданы некорректные данные удаления.',
+        });
+      } else {
+        res.status(STATUS_CODE.serverError).send({
+          message: 'Произошла ошибка на сервере.',
+        });
       }
-      res.status(STATUS_CODE.serverError).send({ message: 'Ошибка на сервере' });
     });
 };
 
@@ -51,17 +59,25 @@ module.exports.likeCard = (req, res) => {
 
   Card.findByIdAndUpdate(req.params.cardId, { $addToSet: { likes: currentUser } }, { new: true })
     .orFail(() => {
-      throw new NotFound('Карточка с указанным _id не найдена');
+      throw new NotFound('Карточка с указанным id не найдена');
     })
     .then((card) => {
       res.status(200).send(card);
     })
     .catch((err) => {
-      if (err.name === 'CastError') {
-        res.status(STATUS_CODE.dataError).send({ message: 'Переданы некорректные данные для постановки лайка' });
-        return;
+      if (err.name === 'NotFound') {
+        res.status(STATUS_CODE.notFound).send({
+          message: 'Карточка с указанным id не найдена.',
+        });
+      } else if (err.name === 'CastError') {
+        res.status(STATUS_CODE.dataError).send({
+          message: 'Переданы некорректные данные удаления.',
+        });
+      } else {
+        res.status(STATUS_CODE.serverError).send({
+          message: 'Произошла ошибка на сервере.',
+        });
       }
-      res.status(STATUS_CODE.serverError).send({ message: 'Ошибка на сервере' });
     });
 };
 
@@ -70,16 +86,24 @@ module.exports.dislikeCard = (req, res) => {
 
   Card.findByIdAndUpdate(req.params.cardId, { $pull: { likes: currentUser } }, { new: true })
     .orFail(() => {
-      throw new NotFound('Карточка с указанным _id не найдена');
+      throw new NotFound('Карточка с указанным id не найдена');
     })
     .then((card) => {
       res.status(200).send(card);
     })
     .catch((err) => {
-      if (err.name === 'CastError') {
-        res.status(STATUS_CODE.dataError).send({ message: 'Переданы некорректные данные для снятия лайка' });
-        return;
+      if (err.name === 'NotFound') {
+        res.status(STATUS_CODE.notFound).send({
+          message: 'Карточка с указанным id не найдена.',
+        });
+      } else if (err.name === 'CastError') {
+        res.status(STATUS_CODE.dataError).send({
+          message: 'Переданы некорректные данные удаления.',
+        });
+      } else {
+        res.status(STATUS_CODE.serverError).send({
+          message: 'Произошла ошибка на сервере.',
+        });
       }
-      res.status(STATUS_CODE.serverError).send({ message: 'Ошибка на сервере' });
     });
 };

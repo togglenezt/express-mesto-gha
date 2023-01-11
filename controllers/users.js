@@ -40,7 +40,7 @@ module.exports.getUserById = (req, res) => {
           .status(STATUS_CODE.dataError)
           .send({ message: 'Переданы некорректные данные' });
       } if (err.message === 'NotFound') {
-        return res.status(STATUS_CODE.notFound).send({ message: 'Пользователь по указанному _id не найден' });
+        return res.status(STATUS_CODE.notFound).send({ message: 'Пользователь по указанному id не найден' });
       }
       return res.status(STATUS_CODE.serverError).send({ message: 'Ошибка на сервере' });
     });
