@@ -38,7 +38,7 @@ module.exports.deleteCard = (req, res) => {
       res.status(200).send(deletedCard);
     })
     .catch((err) => {
-      if (err.name === 'NotFound') {
+      if (err.statusCode === 404) {
         res.status(STATUS_CODE.notFound).send({
           message: 'Карточка с указанным id не найдена.',
         });
@@ -65,7 +65,7 @@ module.exports.likeCard = (req, res) => {
       res.status(200).send(card);
     })
     .catch((err) => {
-      if (err.name === 'NotFound') {
+      if (err.statusCode === 404) {
         res.status(STATUS_CODE.notFound).send({
           message: 'Карточка с указанным id не найдена.',
         });
@@ -92,7 +92,7 @@ module.exports.dislikeCard = (req, res) => {
       res.status(200).send(card);
     })
     .catch((err) => {
-      if (err.name === 'NotFound') {
+      if (err.statusCode === 404) {
         res.status(STATUS_CODE.notFound).send({
           message: 'Карточка с указанным id не найдена.',
         });
