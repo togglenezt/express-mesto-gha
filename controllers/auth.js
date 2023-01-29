@@ -4,7 +4,7 @@ const userSchema = require('../models/user');
 const BadRequest = require('../errors/BadRequest'); // 400
 const ConflictError = require('../errors/ConflictError'); // 409
 
-// Добавление пользователя
+// создать пользователя
 module.exports.createUsers = (req, res, next) => {
   const {
     name, about, avatar, email, password,
@@ -34,7 +34,8 @@ module.exports.createUsers = (req, res, next) => {
   })
     .catch(next);
 };
-// проверяем почту и пароль
+
+// проверить почту и пароль
 module.exports.login = (req, res, next) => {
   const { email, password } = req.body;
   return userSchema

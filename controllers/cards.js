@@ -1,21 +1,21 @@
-const Card = require('../models/card');
+const cardSchema = require('../models/card');
 const NotFound = require('../errors/NotFound'); // 404
-const CurrentErr = require('../errors/CurrentError'); // 403
+const CurrentErr = require('../errors/CurrentErr'); // 403
 const BadRequest = require('../errors/BadRequest'); // 400
 
+// Показать все карточки
 module.exports.getCards = (req, res, next) => {
-  Card
+  cardSchema
     .find({})
     .then((cards) => res.status(200).send(cards))
     .catch(next);
 };
 
-// Добавить карточку
-module.exports.createCard = (req, res, next) => {
+// создать карточку
+module.exports.createCards = (req, res, next) => {
   const { name, link } = req.body;
   const owner = req.user._id;
-
-  Card
+  cardSchema
     .create({ name, link, owner })
     .then((card) => res.status(201).send(card))
     .catch((err) => {
@@ -30,7 +30,7 @@ module.exports.createCard = (req, res, next) => {
 // удалить карточку
 module.exports.deleteCard = (req, res, next) => {
   const { cardId } = req.params;
-  return Card.findById(cardId)
+  return cardSchema.findById(cardId)
     .then((card) => {
       if (!card) {
         throw new NotFound('Пользователь не найден');
@@ -44,8 +44,8 @@ module.exports.deleteCard = (req, res, next) => {
 };
 
 // поставить лайк
-module.exports.likeCard = (req, res, next) => {
-  Card
+module.exports.getLikes = (req, res, next) => {
+  cardSchema
     .findByIdAndUpdate(
       req.params.cardId,
       { $addToSet: { likes: req.user._id } },
@@ -66,8 +66,8 @@ module.exports.likeCard = (req, res, next) => {
 };
 
 // убрать лайк
-module.exports.dislikeCard = (req, res, next) => {
-  Card
+module.exports.deleteLikes = (req, res, next) => {
+  cardSchema
     .findByIdAndUpdate(
       req.params.cardId,
       { $pull: { likes: req.user._id } },

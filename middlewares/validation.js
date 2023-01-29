@@ -1,6 +1,6 @@
 const { celebrate, Joi } = require('celebrate');
 const isUrl = require('validator/lib/isURL');
-const BadRequest = require('../errors/BadRequest');
+const BadRequest = require('../errors/BadRequest'); // 400
 
 // валидания ссылок
 const validationUrl = (url) => {
@@ -8,15 +8,15 @@ const validationUrl = (url) => {
   if (validate) {
     return url;
   }
-  throw new BadRequest('Неправелный адрес URL');
+  throw new BadRequest('Некорректный адрес URL');
 };
 
-// валидация ID
+// валидация id
 const validationID = (id) => {
   if (/^[0-9a-fA-F]{24}$/.test(id)) {
     return id;
   }
-  throw new BadRequest('Передан неправельный id');
+  throw new BadRequest('Передан некорретный id.');
 };
 
 // аутенфикация
@@ -53,7 +53,7 @@ module.exports.validationUpdateAvatar = celebrate({
   }),
 });
 
-// поиск по ID
+// поиск по id
 module.exports.validationUserId = celebrate({
   params: Joi.object().keys({
     userId: Joi.string().required().custom(validationID),

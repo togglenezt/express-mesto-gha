@@ -1,40 +1,19 @@
-const User = require('../models/user');
 const BadRequest = require('../errors/BadRequest'); // 400
 const NotFound = require('../errors/NotFound'); // 404
+const userSchema = require('../models/user');
 
-// показать всех пользователей
+// Поиск пользователей
 module.exports.getUsers = (req, res, next) => {
-  User
+  userSchema
     .find({})
     .then((users) => res.send(users))
     .catch(next);
 };
 
-// добавить пользователя
-/*
-module.exports.createUser = (req, res) => {
-  const { name, about, avatar } = req.body;
-
-  User.create({ name, about, avatar })
-    .then((user) => res.status(201).send(user))
-    .catch((err) => {
-      if (err.name === 'ValidationError') {
-        res
-          .status(STATUS_CODE.dataError)
-          .send({
-            message: 'Переданы некорректные данные при создании пользователя.',
-          });
-      } else {
-        res.status(STATUS_CODE.serverError).send({ message: 'Ошибка на сервере' });
-      }
-    });
-}; */
-
-// поиск по id
+// Поиск по id
 module.exports.getUserById = (req, res, next) => {
   const { userId } = req.params;
-
-  User.findById(userId)
+  userSchema.findById(userId)
     .then((user) => {
       if (!user) {
         throw new NotFound('Пользователь не найден');
@@ -50,11 +29,10 @@ module.exports.getUserById = (req, res, next) => {
     });
 };
 
-// обновление данных
+// обновить данные
 module.exports.updateUser = (req, res, next) => {
   const { name, about } = req.body;
-
-  User
+  userSchema
     .findByIdAndUpdate(
       req.user._id,
       { name, about },
@@ -73,11 +51,10 @@ module.exports.updateUser = (req, res, next) => {
     });
 };
 
-// обновление аватара
+// обновить аватар
 module.exports.updateAvatar = (req, res, next) => {
   const { avatar } = req.body;
-
-  User
+  userSchema
     .findByIdAndUpdate(
       req.user._id,
       { avatar },
@@ -93,7 +70,7 @@ module.exports.updateAvatar = (req, res, next) => {
 
 // текущий пользователь
 module.exports.getCurrentUser = (req, res, next) => {
-  User.findById(req.user._id)
+  userSchema.findById(req.user._id)
     .then((user) => {
       if (!user) {
         throw new NotFound('Пользователь не найден');
