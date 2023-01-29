@@ -1,7 +1,7 @@
 const cardSchema = require('../models/card');
-const NotFound = require('../errors/NotFound'); // 404
-const CurrentErr = require('../errors/CurrentErr'); // 403
-const BadRequest = require('../errors/BadRequest'); // 400
+const NotFound = require('../errors/NotFound');
+const CurrentErr = require('../errors/CurrentErr');
+const BadRequest = require('../errors/BadRequest');
 
 // Показать все карточки
 module.exports.getCards = (req, res, next) => {

@@ -1,8 +1,8 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const userSchema = require('../models/user');
-const BadRequest = require('../errors/BadRequest'); // 400
-const ConflictError = require('../errors/ConflictError'); // 409
+const BadRequest = require('../errors/BadRequest');
+const ConflictError = require('../errors/ConflictError');
 
 // создать пользователя
 module.exports.createUsers = (req, res, next) => {

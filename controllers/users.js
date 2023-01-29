@@ -1,5 +1,5 @@
-const BadRequest = require('../errors/BadRequest'); // 400
-const NotFound = require('../errors/NotFound'); // 404
+const BadRequest = require('../errors/BadRequest');
+const NotFound = require('../errors/NotFound');
 const userSchema = require('../models/user');
 
 // Поиск пользователей
