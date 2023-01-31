@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const helmet = require('helmet');
@@ -12,14 +13,9 @@ const app = express();
 app.use(bodyParser.json());
 const { validationCreateUser, validationLogin } = require('./middlewares/validation');
 
-const { PORT = 3000, MONGO_URL = 'mongodb://localhost:27017/mestodb' } = process.env;
+const { PORT, MONGO_URL } = process.env;
 const { createUsers, login } = require('./controllers/auth');
 
-app.post('/signin', validationLogin, login);
-app.post('/signup', validationCreateUser, createUsers);
-app.use(auth);
-app.use(router);
-app.use(helmet());
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 100,
@@ -27,6 +23,13 @@ const limiter = rateLimit({
   legacyHeaders: false,
 });
 app.use(limiter);
+app.use(helmet());
+
+app.post('/signin', validationLogin, login);
+app.post('/signup', validationCreateUser, createUsers);
+app.use(auth);
+app.use(router);
+
 async function connect() {
   try {
     await mongoose.set('strictQuery', false);
