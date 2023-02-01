@@ -45,11 +45,12 @@ app.use((err, req, res, next) => {
   next();
 });
 
+app.post('/signin', validationLogin, login);
+app.post('/signup', validationCreateUser, createUsers);
+
 app.use(limiter);
 app.use(helmet());
 
-app.post('/signin', validationLogin, login);
-app.post('/signup', validationCreateUser, createUsers);
 app.use(auth);
 app.use(router);
 
