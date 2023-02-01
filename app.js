@@ -16,12 +16,22 @@ const { validationCreateUser, validationLogin } = require('./middlewares/validat
 const { PORT, MONGO_URL } = process.env;
 const { createUsers, login } = require('./controllers/auth');
 
+app.post('/signin', validationLogin, login);
+app.post('/signup', validationCreateUser, createUsers);
+
+app.use(auth);
+app.use(router);
+
+app.use(helmet());
+
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 100,
   standardHeaders: true,
   legacyHeaders: false,
 });
+
+app.use(limiter);
 
 async function connect() {
   try {
@@ -44,14 +54,5 @@ app.use((err, req, res, next) => {
   });
   next();
 });
-
-app.post('/signin', validationLogin, login);
-app.post('/signup', validationCreateUser, createUsers);
-
-app.use(limiter);
-app.use(helmet());
-
-app.use(auth);
-app.use(router);
 
 connect();
