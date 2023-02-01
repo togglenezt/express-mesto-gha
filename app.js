@@ -22,13 +22,6 @@ const limiter = rateLimit({
   standardHeaders: true,
   legacyHeaders: false,
 });
-app.use(limiter);
-app.use(helmet());
-
-app.post('/signin', validationLogin, login);
-app.post('/signup', validationCreateUser, createUsers);
-app.use(auth);
-app.use(router);
 
 async function connect() {
   try {
@@ -51,5 +44,13 @@ app.use((err, req, res, next) => {
   });
   next();
 });
+
+app.use(limiter);
+app.use(helmet());
+
+app.post('/signin', validationLogin, login);
+app.post('/signup', validationCreateUser, createUsers);
+app.use(auth);
+app.use(router);
 
 connect();
