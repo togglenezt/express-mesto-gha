@@ -16,14 +16,6 @@ const { validationCreateUser, validationLogin } = require('./middlewares/validat
 const { PORT, MONGO_URL } = process.env;
 const { createUsers, login } = require('./controllers/auth');
 
-app.post('/signin', validationLogin, login);
-app.post('/signup', validationCreateUser, createUsers);
-
-app.use(auth);
-app.use(router);
-
-app.use(helmet());
-
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 100,
@@ -32,6 +24,12 @@ const limiter = rateLimit({
 });
 
 app.use(limiter);
+app.use(helmet());
+
+app.post('/signin', validationLogin, login);
+app.post('/signup', validationCreateUser, createUsers);
+app.use(auth);
+app.use(router);
 
 async function connect() {
   try {
